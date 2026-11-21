@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>中国近现代史</title>
+<style>
+@page { size: A4; margin: 0; }
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: #e2e8f0;
+  color: #1e293b;
+  font-family: "Noto Serif CJK SC", "Source Han Serif SC", "Songti SC", "SimSun", serif;
+  font-size: 10pt;
+  line-height: 1.55;
+}
+.page {
+  width: 210mm;
+  min-height: 297mm;
+  padding: 12mm;
+  box-sizing: border-box;
+  overflow: hidden;
+  background: #ffffff;
+  margin: 0 auto 8mm;
+  position: relative;
+}
+.page-inner {
+  width: 98%;
+  min-height: calc(297mm - 24mm);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+@media print {
+  body { background: #ffffff; }
+  .page { margin: 0; page-break-after: always; break-after: page; }
+  .page:last-child { page-break-after: auto; break-after: auto; }
+}
+.page-head {
+  border-bottom: 0.7mm solid #0f172a;
+  padding-bottom: 4mm;
+  margin-bottom: 6mm;
+}
+.eyebrow {
+  margin: 0 0 2mm;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-size: 8pt;
+  letter-spacing: 0.35em;
+  color: #64748b;
+}
+h1 { margin: 0; font-size: 26pt; letter-spacing: 0.06em; }
+.subtitle { margin: 2mm 0 0; font-size: 10pt; color: #475569; }
+.section-title { margin: 0 0 2mm; font-size: 12pt; }
+.scale-panel { width: 100%; margin: 2mm 0 4mm; }
+.axis { position: relative; height: 62mm; margin: 8mm 0 2mm; }
+.axis-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 0.7mm;
+  background: #0f172a;
+  border-radius: 0.35mm;
+}
+.axis-year {
+  position: absolute;
+  top: calc(50% + 4mm);
+  transform: translateX(-50%);
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-weight: 700;
+  font-size: 9pt;
+  color: #334155;
+}
+.axis-year.axis-end { top: auto; bottom: calc(50% + 4mm); }
+.axis-event { position: absolute; top: 50%; width: 0; height: 0; }
+.axis-dot {
+  position: absolute;
+  left: -1.5mm;
+  top: -1.5mm;
+  width: 3mm;
+  height: 3mm;
+  border-radius: 50%;
+  background: var(--accent, #475569);
+  border: 0.35mm solid #ffffff;
+  box-shadow: 0 0 0 0.25mm var(--accent, #475569);
+}
+.axis-label {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 16mm;
+  text-align: center;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-size: 8pt;
+  font-weight: 700;
+  color: #334155;
+}
+.axis-event.top .axis-label { bottom: 4mm; }
+.axis-event.bottom .axis-label { top: 4mm; }
+.legend {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3mm 6mm;
+  margin: 6mm 0 0;
+  padding: 5mm 6mm;
+  background: #f8fafc;
+  border-left: 1mm solid #0f172a;
+}
+.legend li { display: flex; align-items: center; font-size: 9pt; color: #334155; }
+.legend-dot {
+  width: 2.6mm;
+  height: 2.6mm;
+  border-radius: 50%;
+  margin-right: 2mm;
+  background: var(--accent, #64748b);
+}
+.timeline {
+  position: relative;
+  width: 100%;
+  padding-left: 12mm;
+  margin-top: 2mm;
+}
+.timeline::before {
+  content: "";
+  position: absolute;
+  left: 3mm;
+  top: 0;
+  bottom: 0;
+  width: 0.7mm;
+  background: #cbd5e1;
+}
+.cards { flex: 1; }
+.card {
+  position: relative;
+  padding: 3.5mm 4.5mm;
+  margin: 0 0 6mm 0;
+  background: #f8fafc;
+  border-left: 1mm solid var(--accent, #64748b);
+  border-radius: 0 2mm 2mm 0;
+}
+.card::before {
+  content: "";
+  position: absolute;
+  left: -10.5mm;
+  top: 6mm;
+  width: 3mm;
+  height: 3mm;
+  border-radius: 50%;
+  background: var(--accent, #64748b);
+  border: 0.4mm solid #ffffff;
+  box-shadow: 0 0 0 0.25mm var(--accent, #64748b);
+}
+.card-year {
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-size: 12pt;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--accent, #334155);
+}
+.card-title { margin: 1mm 0 1.5mm; font-size: 15pt; }
+.tag {
+  display: inline-block;
+  padding: 0.6mm 2.5mm;
+  border-radius: 4mm;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-size: 8pt;
+  color: #ffffff;
+  background: var(--accent, #64748b);
+}
+.card-desc { margin: 2mm 0 0; font-size: 10pt; color: #475569; }
+.timeline.compact .card { padding: 2mm 3mm; margin-bottom: 3mm; }
+.timeline.compact .card::before { top: 4mm; }
+.timeline.compact .card-year { font-size: 10pt; }
+.timeline.compact .card-title { margin: 0.5mm 0 1mm; font-size: 12pt; }
+.timeline.compact .card-desc { margin-top: 1mm; font-size: 9pt; }
+.compact-head { margin-bottom: 4mm; }
+.compact-head h2 { margin: 0; font-size: 14pt; }
+.compact-head .subtitle { font-size: 9pt; }
+.page-footer {
+  margin-top: auto;
+  padding-top: 4mm;
+  border-top: 0.3mm solid #cbd5e1;
+  display: flex;
+  justify-content: space-between;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-size: 8pt;
+  color: #64748b;
+}
+.empty-head { border-bottom-color: #94a3b8; }
+.empty-box {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0.5mm dashed #cbd5e1;
+  border-radius: 3mm;
+  color: #64748b;
+  font-size: 12pt;
+}
+.cat-0 { --accent: #b91c1c; }
+.cat-1 { --accent: #1d4ed8; }
+.cat-2 { --accent: #047857; }
+.cat-3 { --accent: #b45309; }
+.cat-4 { --accent: #6d28d9; }
+.cat-none { --accent: #64748b; }
+</style>
+</head>
+<body>
+<section class="page"><div class="page-inner"><header class="page-head">
+<p class="eyebrow">TIMELINE</p>
+<h1>中国近现代史</h1>
+<p class="subtitle">1840 — 1949 · 共 12 个事件</p>
+</header>
+<section class="scale-panel">
+<h2 class="section-title">年代尺</h2>
+<div class="axis">
+<div class="axis-line"></div>
+<span class="axis-year" style="left:0%">1840</span>
+<span class="axis-year axis-end" style="left:100%">1949</span>
+<div class="axis-event top cat-0" style="left:0.000%" title="鸦片战争"><span class="axis-dot"></span><span class="axis-label">1840</span></div>
+<div class="axis-event bottom cat-2" style="left:10.092%" title="太平天国运动"><span class="axis-dot"></span><span class="axis-label">1851</span></div>
+<div class="axis-event top cat-0" style="left:49.541%" title="甲午中日战争"><span class="axis-dot"></span><span class="axis-label">1894</span></div>
+<div class="axis-event bottom cat-1" style="left:53.211%" title="戊戌变法"><span class="axis-dot"></span><span class="axis-label">1898</span></div>
+<div class="axis-event top cat-4" style="left:55.046%" title="义和团运动"><span class="axis-dot"></span><span class="axis-label">1900</span></div>
+<div class="axis-event bottom cat-2" style="left:65.138%" title="辛亥革命"><span class="axis-dot"></span><span class="axis-label">1911</span></div>
+<div class="axis-event top cat-3" style="left:72.477%" title="五四运动"><span class="axis-dot"></span><span class="axis-label">1919</span></div>
+<div class="axis-event bottom cat-2" style="left:74.312%" title="中国共产党成立"><span class="axis-dot"></span><span class="axis-label">1921</span></div>
+<div class="axis-event top cat-0" style="left:83.486%" title="九一八事变"><span class="axis-dot"></span><span class="axis-label">1931</span></div>
+<div class="axis-event bottom cat-0" style="left:88.991%" title="七七事变"><span class="axis-dot"></span><span class="axis-label">1937</span></div>
+<div class="axis-event top cat-0" style="left:96.330%" title="抗日战争胜利"><span class="axis-dot"></span><span class="axis-label">1945</span></div>
+<div class="axis-event bottom cat-2" style="left:100.000%" title="新中国成立"><span class="axis-dot"></span><span class="axis-label">1949</span></div>
+</div>
+<p class="subtitle">共 12 个事件 · 按年份比例定位</p>
+</section>
+<ul class="legend">
+<li class="cat-0"><span class="legend-dot"></span>战争</li>
+<li class="cat-1"><span class="legend-dot"></span>改革</li>
+<li class="cat-2"><span class="legend-dot"></span>政治</li>
+<li class="cat-3"><span class="legend-dot"></span>文化</li>
+<li class="cat-4"><span class="legend-dot"></span>社会</li>
+</ul>
+<footer class="page-footer"><span>中国近现代史</span><span>第 1 / 3 页</span></footer></div></section>
+<section class="page"><div class="page-inner"><header class="page-head compact-head">
+<h2>中国近现代史</h2>
+<p class="subtitle">1840 — 1949</p>
+</header>
+<div class="timeline cards">
+<article class="card cat-0">
+<div class="card-year">1840</div>
+<h3 class="card-title">鸦片战争</h3>
+<span class="tag">战争</span>
+<p class="card-desc">英国发动侵华战争，中国近代史开端</p>
+</article>
+<article class="card cat-2">
+<div class="card-year">1851</div>
+<h3 class="card-title">太平天国运动</h3>
+<span class="tag">政治</span>
+<p class="card-desc">洪秀全在广西金田起义</p>
+</article>
+<article class="card cat-0">
+<div class="card-year">1894</div>
+<h3 class="card-title">甲午中日战争</h3>
+<span class="tag">战争</span>
+<p class="card-desc">黄海海战，北洋水师覆没</p>
+</article>
+<article class="card cat-1">
+<div class="card-year">1898</div>
+<h3 class="card-title">戊戌变法</h3>
+<span class="tag">改革</span>
+<p class="card-desc">康有为、梁启超推动维新变法</p>
+</article>
+<article class="card cat-4">
+<div class="card-year">1900</div>
+<h3 class="card-title">义和团运动</h3>
+<span class="tag">社会</span>
+<p class="card-desc">反帝爱国运动兴起</p>
+</article>
+<article class="card cat-2">
+<div class="card-year">1911</div>
+<h3 class="card-title">辛亥革命</h3>
+<span class="tag">政治</span>
+<p class="card-desc">武昌起义推翻清朝统治</p>
+</article>
+</div>
+<footer class="page-footer"><span>中国近现代史</span><span>第 2 / 3 页</span></footer></div></section>
+<section class="page"><div class="page-inner"><header class="page-head compact-head">
+<h2>中国近现代史</h2>
+<p class="subtitle">1840 — 1949</p>
+</header>
+<div class="timeline cards">
+<article class="card cat-3">
+<div class="card-year">1919</div>
+<h3 class="card-title">五四运动</h3>
+<span class="tag">文化</span>
+<p class="card-desc">北京学生游行示威，新民主主义革命开端</p>
+</article>
+<article class="card cat-2">
+<div class="card-year">1921</div>
+<h3 class="card-title">中国共产党成立</h3>
+<span class="tag">政治</span>
+<p class="card-desc">中共一大在上海召开</p>
+</article>
+<article class="card cat-0">
+<div class="card-year">1931</div>
+<h3 class="card-title">九一八事变</h3>
+<span class="tag">战争</span>
+<p class="card-desc">日本侵占东北</p>
+</article>
+<article class="card cat-0">
+<div class="card-year">1937</div>
+<h3 class="card-title">七七事变</h3>
+<span class="tag">战争</span>
+<p class="card-desc">全民族抗战爆发</p>
+</article>
+<article class="card cat-0">
+<div class="card-year">1945</div>
+<h3 class="card-title">抗日战争胜利</h3>
+<span class="tag">战争</span>
+<p class="card-desc">日本宣布无条件投降</p>
+</article>
+<article class="card cat-2">
+<div class="card-year">1949</div>
+<h3 class="card-title">新中国成立</h3>
+<span class="tag">政治</span>
+<p class="card-desc">中华人民共和国中央人民政府成立</p>
+</article>
+</div>
+<footer class="page-footer"><span>中国近现代史</span><span>第 3 / 3 页</span></footer></div></section>
+</body>
+</html>
