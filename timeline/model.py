@@ -103,12 +103,12 @@ def parse_csv_text(text: str) -> List[Event]:
 def read_csv(path: Path) -> List[Event]:
     """读取 CSV 文件，依次尝试 UTF-8（含 BOM）与 GBK 编码。"""
     file_path = Path(path)
+    if file_path.is_dir():
+        raise TimelineError("不是有效的 CSV 文件（目标是目录）：{}".format(file_path))
     try:
         raw = file_path.read_bytes()
     except FileNotFoundError as exc:
         raise FileNotFoundError("文件不存在：{}".format(file_path)) from exc
-    except IsADirectoryError as exc:
-        raise TimelineError("不是有效的 CSV 文件（目标是目录）：{}".format(file_path)) from exc
     except PermissionError as exc:
         raise PermissionError("没有读取权限：{}".format(file_path)) from exc
     except OSError as exc:
